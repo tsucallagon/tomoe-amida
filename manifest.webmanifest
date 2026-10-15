@@ -1,0 +1,16 @@
+{
+  "name": "巴戦 あみだくじ",
+  "short_name": "巴戦くじ",
+  "description": "3チームの巴戦で初回対戦チームと待機チームを決めるあみだくじ",
+  "lang": "ja",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f2f7f2",
+  "theme_color": "#14532d",
+  "icons": [
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
