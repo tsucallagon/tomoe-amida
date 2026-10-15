@@ -21,7 +21,7 @@
   function getNames() {
     return [0,1,2].map(i => {
       const value = document.getElementById("team"+i).value.trim();
-      return value || `チーム${["A","B","C"][i]}`;
+      return value || `${["ピンク","青","紫"][i]}`;
     });
   }
   function shuffle(a) {
@@ -70,16 +70,24 @@
     // Top labels
     names.forEach((name,i) => {
       svg.appendChild(el("text",{x:X[i],y:25,"text-anchor":"middle","font-size":name.length>7?11:13,"font-weight":700,fill:"#1f2937"},name.length>9?name.slice(0,9)+"…":name));
-      svg.appendChild(el("circle",{cx:X[i],cy:44,r:5,fill:["#dc2626","#2563eb","#16a34a"][i]}));
+      // svg.appendChild(el("circle",{cx:X[i],cy:44,r:5,fill:["#dc2626","#2563eb","#16a34a"][i]}));
+      svg.appendChild(el("circle",{cx:X[i],cy:44,r:5,fill:["#ff33cc","#2563eb","#8a2be2"][i]}));
     });
     X.forEach(x => svg.appendChild(el("line",{x1:x,y1:TOP,x2:x,y2:BOTTOM,stroke:"#9ca3af","stroke-width":3,"stroke-linecap":"round"})));
     rungs.forEach(r => {
       svg.appendChild(el("line",{x1:X[r.pair],y1:r.y,x2:X[r.pair+1],y2:r.y,stroke:"#4b5563","stroke-width":4,"stroke-linecap":"round"}));
     });
-    [0,1,2].forEach(i => {
-      svg.appendChild(el("text",{x:X[i],y:394,"text-anchor":"middle","font-size":12,"font-weight":700,fill:"#374151"},`くじ ${i+1}`));
-      svg.appendChild(el("circle",{cx:X[i],cy:412,r:5,fill:"#d1d5db"}));
-    });
+    //[0,1,2].forEach(i => {
+    //  svg.appendChild(el("text",{x:X[i],y:394,"text-anchor":"middle","font-size":12,"font-weight":700,fill:"#374151"},`くじ ${i+1}`));
+    //  svg.appendChild(el("circle",{cx:X[i],cy:412,r:5,fill:"#d1d5db"}));
+    //});
+    svg.appendChild(el("text",{x:X[0],y:394,"text-anchor":"middle","font-size":12,"font-weight":700,fill:"#374151"},`左側`));
+    svg.appendChild(el("circle",{cx:X[0],cy:412,r:5,fill:"#d1d5db"}));
+    svg.appendChild(el("text",{x:X[1],y:394,"text-anchor":"middle","font-size":12,"font-weight":700,fill:"#374151"},`待機`));
+    svg.appendChild(el("circle",{cx:X[1],cy:412,r:5,fill:"#d1d5db"}));
+    svg.appendChild(el("text",{x:X[2],y:394,"text-anchor":"middle","font-size":12,"font-weight":700,fill:"#374151"},`右側`));
+    svg.appendChild(el("circle",{cx:X[2],cy:412,r:5,fill:"#d1d5db"}));
+
     if (activePath) {
       svg.appendChild(el("path",{d:activePath,fill:"none",stroke:"#f59e0b","stroke-width":7,"stroke-linecap":"round","stroke-linejoin":"round",opacity:.95}));
     }
@@ -116,7 +124,8 @@
     // A proper amidakuji gives a permutation of three bottom positions.
     const paths = names.map((_,i)=>tracePath(i,rungs));
     drawBase(names,rungs);
-    const colors = ["#dc2626","#2563eb","#16a34a"];
+    //const colors = ["#dc2626","#2563eb","#16a34a"];
+    const colors = ["#ff33cc","#2563eb","#8a2be2"];
     for (let i=0;i<3;i++) {
       const p = tracePath(i,rungs);
       animationStatus.textContent = `${names[i]} の線をたどっています…`;
@@ -126,7 +135,7 @@
     // Use the actual bottom order. The first two lottery positions play; the third waits.
     const bottom = [null,null,null];
     names.forEach((name,i) => { bottom[paths[i].lane] = name; });
-    lastResult = { match: [bottom[0],bottom[1]], waiting: bottom[2], names };
+    lastResult = { match: [bottom[0],bottom[2]], waiting: bottom[1], names };
     document.getElementById("matchA").textContent = lastResult.match[0];
     document.getElementById("matchB").textContent = lastResult.match[1];
     document.getElementById("waitingTeam").textContent = lastResult.waiting;
@@ -151,7 +160,7 @@
   });
   document.getElementById("shareBtn").addEventListener("click",async()=>{
     if (!lastResult) return;
-    const text = `巴戦・初回対戦抽選\n第1試合：${lastResult.match[0]} vs ${lastResult.match[1]}\n待機：${lastResult.waiting}`;
+    const text = `巴戦・初回対戦抽選\n第1試合：${lastResult.match[0]} vs ${lastResult.match[2]}\n待機：${lastResult.waiting}`;
     const status = document.getElementById("copyStatus");
     try {
       if (navigator.clipboard && window.isSecureContext) {
